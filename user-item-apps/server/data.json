@@ -1,0 +1,28 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Guntur",
+      "hobby": "Maen gim"
+    },
+    {
+      "id": 2,
+      "name": "Gabu",
+      "hobby": "turu"
+    },
+    {
+      "name": "ucup",
+      "hobby": "bikin emak marah",
+      "id": 3
+    }
+  ],
+  "items": [
+    {
+      "id": 1,
+      "name": "mie goreng",
+      "type": "mie",
+      "price": 9000,
+      "stock": 1
+    }
+  ]
+}
