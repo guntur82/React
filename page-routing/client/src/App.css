@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Aboreto&family=DynaPuff:wght@400;500;600;700&display=swap');
+
+:root {
+  font-size: 10px;
+}
+body {
+  font-family: 'DynaPuff', cursive;
+}
+
+.logo-font {
+  font-family: 'Aboreto', cursive;
+}
+
+.home-icons {
+  font-size: 54px;
+  color: cornflowerblue;
+}
+
+.home-title {
+  font-weight: bold;
+}
