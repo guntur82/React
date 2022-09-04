@@ -10,6 +10,6 @@ route.get('/api', (req, res) => {
 const userRoutes = require('./user');
 const itemRoutes = require('./item');
 route.use('/api/users', userRoutes);
-route.use('/api/item', itemRoutes);
+route.use('/api/items', itemRoutes);
 
 module.exports = route;

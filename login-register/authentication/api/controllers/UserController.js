@@ -1,5 +1,6 @@
 const { User } = require('../models');
 const { decryptPass } = require('../helpers/bcrypt');
+const { tokenGenerator, tokenVerifier } = require('../helpers/jsonwebtoken');
 
 class UserController {
   static async getAllUsers(req, res) {
@@ -83,11 +84,20 @@ class UserController {
       let emailFound = await User.findOne({
         where: { email },
       });
-      emailFound
-        ? decryptPass(password, emailFound.password)
-          ? res.status(200).json(emailFound)
-          : res.status(403).json({ message: `Invalid password` })
-        : res.status(404).json({ message: `User ${email} not found` });
+      if (emailFound) {
+        if (decryptPass(password, emailFound.password)) {
+          let access_token = tokenGenerator(emailFound);
+          res.status(200).json({
+            access_token,
+          });
+          let verifyToken = tokenVerifier(access_token);
+          console.log(verifyToken);
+        } else {
+          res.status(404).json({ message: `User ${email} not found` });
+        }
+      } else {
+        res.status(403).json({ message: `Invalid password` });
+      }
     } catch (error) {
       res.status(500).json(error);
     }
