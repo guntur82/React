@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
-const salt = 5;
+// salt = format random(bisa bebas angkanya)
+const salt = +process.env.SALT_ROUND || 5;
 
 const encryptPass = (data) => {
   return bcrypt.hashSync(String(data), salt);

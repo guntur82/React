@@ -1,5 +1,5 @@
 const { User } = require('../models');
-const { encryptPass } = require('../helpers/bcrypt');
+const { decryptPass } = require('../helpers/bcrypt');
 
 class UserController {
   static async getAllUsers(req, res) {
@@ -12,7 +12,7 @@ class UserController {
       res.status(500).json(error);
     }
   }
-  static async createUser(req, res) {
+  static async register(req, res) {
     try {
       const { username, email, password, image, age } = req.body;
       let result = await User.create({
@@ -30,12 +30,68 @@ class UserController {
   }
   static async updateUser(req, res) {
     try {
+      const id = +req.params.id;
+      // const { username, email, password } = req.body;
+      let result = await User.update(req.body, {
+        where: { id },
+        // buat 3ger hooknya
+        individualHooks: true,
+      });
+      result[0] === 1
+        ? res.status(200).json({
+            message: `User id ${id} has been updated`,
+          })
+        : // 404 not found
+          res.status(404).json({
+            message: `User id ${id} not found`,
+          });
     } catch (error) {
       res.status(500).json(error);
     }
   }
-  static deleteUser(req, res) {}
-  static getUser(req, res) {}
+  static async deleteUser(req, res) {
+    try {
+      const id = +req.params.id;
+      let result = await User.destroy({
+        where: { id },
+      });
+      result === 1
+        ? res.status(200).json({
+            message: `User id ${id} has been deleted`,
+          })
+        : // 404 not found
+          res.status(404).json({
+            message: `User id ${id} not found`,
+          });
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+  static async getUser(req, res) {
+    try {
+      const id = +req.params.id;
+      let result = await User.findByPk(id);
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
+
+  static async login(req, res) {
+    try {
+      const { email, password } = req.body;
+      let emailFound = await User.findOne({
+        where: { email },
+      });
+      emailFound
+        ? decryptPass(password, emailFound.password)
+          ? res.status(200).json(emailFound)
+          : res.status(403).json({ message: `Invalid password` })
+        : res.status(404).json({ message: `User ${email} not found` });
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
 }
 
 module.exports = UserController;
